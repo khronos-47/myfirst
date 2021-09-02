@@ -1,0 +1,28 @@
+import asyncio
+import aiogram
+from aiogram import Bot, Dispatcher  , executor
+from aiogram.types import Message
+import pafy
+token = '1655671816:AAFdrX2jOt7Xr9LhDCNGIKp1q_opu2VN7U0'
+admin_id = 907267780
+
+loop=asyncio.get_event_loop()
+bot=Bot(token)
+dp=Dispatcher(bot,loop=loop)
+
+@dp.message_handler(commands=['start'])
+async def start (dp):
+	await bot.send_message(chat_id=admin_id , text='hello')
+@dp.message_handler(Message)
+async def echo(message: Message):
+	text=message.text
+	yVideo = pafy.new(text)
+	video = yVideo.getbest()
+	video.download()
+	nvideo=aiogram.types.InputFile.from_url(text)
+	#await bot.send_message(chat_id=admin_id , text=text)
+	#file = await bot.get_file(text)
+	#file_path = file.file_path
+	await bot.send_video(chat_id = admin_id , video=video)
+	#await bot.download_file( file_path = file_path ,  destination=video)
+executor.start_polling(dp)
